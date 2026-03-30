@@ -1,8 +1,10 @@
 library(tidyverse)
 
 complaints <- read_csv(
-  URLencode("https://data.cityofnewyork.us/resource/ygpa-z7cr.csv?$limit=150000&$where=received_date >= '2026-01-20T00:00:00'"
-))
+  URLencode(
+    "https://data.cityofnewyork.us/resource/ygpa-z7cr.csv?$limit=350000&$where=received_date >= '2026-01-25T00:00:00' AND received_date <= '2026-02-02T00:00:00'"
+  )
+)
 
 heat_hotwater <- complaints %>% 
   filter(major_category == "HEAT/HOT WATER")
@@ -22,10 +24,24 @@ new_status <- heat_hotwater %>%
     str_detect(status_description, "Heat was not required at the time of the inspection") ~ "Heat not required",
     str_detect(status_description, "The following complaint conditions are still open.") ~ "Still open",
     str_detect(status_description, "More than one complaint was received for this building-wide condition. This complaint status is for the initial complaint") ~ "Other complaint",
-  )) %>%
+  ),
+  duplicate = str_detect(status_description, "More than one complaint was received for this building-wide condition."),
+  apt = if_else(unit_type=="BUILDING-WIDE", FALSE, TRUE)) %>%
   arrange(building_id, desc(received_date))
 
 new_status %>% count(new_status, complaint_status) %>% print(n=Inf)
 
+new_status %>% count(duplicate, problem_duplicate_flag)
+
+new_status %>% filter(problem_duplicate_flag=="Y") %>% count(new_status)
+
+new_status %>% count(duplicate, apt)
+
 unsorted <- new_status %>% filter(is.na(new_status))
+
+bldg_count <- new_status %>% group_by(building_id) %>% summarize(count = n())
+
+summary(bldg_count)
+
+count(bldg_count, count)
 
