@@ -30,6 +30,7 @@ new_status <- heat_hotwater %>%
   arrange(building_id, desc(received_date))
 
 new_status %>% count(new_status, complaint_status) %>% print(n=Inf)
+new_status %>% count(new_status, problem_duplicate_flag) %>% print(n=Inf)
 
 new_status %>% count(duplicate, problem_duplicate_flag)
 
@@ -45,3 +46,21 @@ summary(bldg_count)
 
 count(bldg_count, count)
 
+
+resolution_sum <- new_status %>% 
+  mutate(source = if_else(problem_duplicate_flag=="Y", "Tagged as duplicate", "Primary complaint"),
+         from = 1,
+         to = 2,
+         dest = new_status) %>% 
+  group_by(source, dest, from, to) %>% 
+  summarize(value = n())
+
+dup_sum <- new_status %>% 
+  mutate(source = "Complaint",
+         from = 0,
+         to = 1,
+         dest = if_else(problem_duplicate_flag=="Y", "Tagged as duplicate", "Primary complaint")) %>% 
+  group_by(source, dest, from, to) %>% 
+  summarize(value = n())
+
+bind_rows(dup_sum, resolution_sum) %>% write_csv("flowchart.csv")
