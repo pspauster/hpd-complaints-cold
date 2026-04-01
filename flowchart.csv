@@ -1,16 +1,15 @@
 source,dest,from,to,value
 Complaint,Primary complaint,0,1,15088
 Complaint,Tagged as duplicate,0,1,21247
+Primary complaint,Contacted in person,1,2,3890
+Primary complaint,Contacted tenant,1,2,1862
+Primary complaint,Contacted via phone call,1,2,2284
 Primary complaint,No access,1,2,3351
-Primary complaint,No inspection (no reason),1,2,70
-Primary complaint,No violation,1,2,2226
-Primary complaint,No violation issued,1,2,2
+Primary complaint,No violation,1,2,2228
+Primary complaint,Other,1,2,70
 Primary complaint,Still open,1,2,3
-Primary complaint,Tenant no issue (ambiguous),1,2,1862
-Primary complaint,Tenant no issue (in person),1,2,3890
-Primary complaint,Tenant no issue (phone call),1,2,2284
 Primary complaint,Violation already issued,1,2,19
 Primary complaint,Violation issued,1,2,1381
+Tagged as duplicate,Contacted tenant,1,2,11439
+Tagged as duplicate,Contacted via phone call,1,2,9797
 Tagged as duplicate,Still open,1,2,11
-Tagged as duplicate,Tenant no issue (ambiguous),1,2,11439
-Tagged as duplicate,Tenant no issue (phone call),1,2,9797
